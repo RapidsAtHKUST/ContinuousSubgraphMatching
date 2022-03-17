@@ -61,7 +61,7 @@ Each line in the query graph file represent a vertex or an edge.
 1. A vertex is represented by `v <vertex-id> <vertex-label>`;
 2. An edge is represented by `e <vertex-id-1> <vertex-id-2> <edge-label>`.
 
-Both the two endpoint vertices of an edge should present before the edge. For example, 
+The two endpoints of an edge must appear before the edge. For example, 
 
 ```
 v 0 0
@@ -85,7 +85,7 @@ Graph update stream is a collection of insertions and deletions of a vertex or a
 3. An edge insertion is represented by `e <vertex-id-1> <vertex-id-2> <edge-label>`;
 4. An edge deletion is represented by `-e <vertex-id-1> <vertex-id-2> <edge-label>`;
 
-The vertex or edge to be deleted should exist in the graph, and the label should be the same as that in the graph. If an edge is inserted to the data graph, both its endpoints should exist. For example,
+The vertex or edge to be deleted must exist in the graph, and the label must be the same as that in the graph. If an edge is inserted to the data graph, both its endpoints must exist. For example,
 
 ```
 v 3 1
