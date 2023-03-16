@@ -967,11 +967,12 @@ void TurboFlux::RemoveEdge(uint v1, uint v2)
     for (uint u2 = 0; u2 < query_.NumVertices(); u2++)
     if (data_.GetVertexLabel(v2) == query_.GetVertexLabel(u2))
     {
-        auto it = std::lower_bound(DCS_[eidx_[u1][u2]][v1].begin(), DCS_[eidx_[u1][u2]][v1].end(), v2);
+        /*auto it = std::lower_bound(DCS_[eidx_[u1][u2]][v1].begin(), DCS_[eidx_[u1][u2]][v1].end(), v2);
         if (
             it == DCS_[eidx_[u1][u2]][v1].end() ||
             *it != v2
-        ) continue;
+        ) continue;*/
+        if (std::get<2>(query_.GetEdgeLabel(u1, u2)) == UINT32_MAX) continue;
         
         bool reversed = false;
         if (std::find(treeNode_[u1].backwards_.begin(), treeNode_[u1].backwards_.end(), u2) != treeNode_[u1].backwards_.end())
@@ -997,6 +998,23 @@ void TurboFlux::RemoveEdge(uint v1, uint v2)
             m[u2] = UNMATCHED;
             if (num_results >= max_num_results_) goto END_ENUMERATION;
             if (reach_time_limit) return;
+        }
+        if (std::find(treeNode_[u1].backwards_.begin(), treeNode_[u1].backwards_.end(), u2) == treeNode_[u1].backwards_.end()
+            && std::find(treeNode_[u2].backwards_.begin(), treeNode_[u2].backwards_.end(), u1) == treeNode_[u2].backwards_.end())
+        {
+            m[u1] = v1;
+            m[u2] = v2;
+            visited_[v1] = true;
+            visited_[v2] = true;
+
+            FindMatches(eidx_[std::min(u1, u2)][std::max(u1, u2)], 2, m, num_results);
+
+            visited_[v1] = false;
+            visited_[v2] = false;
+            m[u1] = UNMATCHED;
+            m[u2] = UNMATCHED;
+            if (num_results >= max_num_results_) goto END_ENUMERATION;
+            if (reach_time_limit) goto END_ENUMERATION;
         }
         if (reversed)
         {
